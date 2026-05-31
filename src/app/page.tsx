@@ -93,6 +93,36 @@ const gameMeta: Record<string, { gameType: string; players: string }> = {
   "war-ring-card": { gameType: "Card", players: "2-4" },
   "tiny-zombies": { gameType: "Horror", players: "1-5" },
 };
+const gameDescriptions: Record<string, string> = {
+  ajedrez: "Duelo abstracto de informacion perfecta donde cada movimiento construye presion, defensa y sacrificios calculados.",
+  uno: "Juego de cartas rapido y directo, centrado en gestionar colores, numeros y cartas especiales para quedarse sin mano antes que el resto.",
+  "dnd-starter": "Puerta de entrada a aventuras de rol fantastico, con personajes, dados y decisiones narrativas compartidas en la mesa.",
+  monopoly: "Clasico economico de compra, alquiler y negociacion donde la partida gira alrededor del control de propiedades.",
+  "coc-guardian": "Rol de investigacion y horror cosmico, pensado para resolver misterios mientras la cordura y los secretos se erosionan.",
+  "ping-pong": "Juego fisico de reflejos y precision, ideal para duelos rapidos o partidas por equipos.",
+  saboteur: "Cartas, tuneles y roles ocultos: algunos jugadores buscan llegar al oro y otros intentan sabotear sin quedar expuestos.",
+  teg: "Estrategia de conquista territorial con objetivos secretos, alianzas temporales y conflicto directo en el mapa.",
+  munchkin: "Parodia de mazmorras con cartas, tesoros y traiciones constantes para subir de nivel antes que los demas.",
+  "pistas-cruzadas": "Juego cooperativo de asociacion de palabras donde una pista debe cruzar dos conceptos sin ser demasiado obvia.",
+  "montanas-locura": "Cooperativo de comunicacion limitada y humor absurdo en una expedicion que se descontrola a medida que avanza.",
+  jenga: "Destreza pura: retirar bloques, mantener la torre estable y forzar al siguiente jugador a enfrentar una estructura imposible.",
+  draftosaurus: "Draft ligero de dinosaurios donde cada decision ubica especies en recintos para maximizar puntos.",
+  "cartografos-heroes": "Flip and write de mapas, monstruos y objetivos de puntuacion que cambian la forma de dibujar cada territorio.",
+  "eldritch-horror": "Aventura cooperativa global contra horrores ancestrales, con exploracion, encuentros y consecuencias persistentes.",
+  "lotr-battle": "Juego de cartas de enfrentamiento ambientado en la Tierra Media, con misiones, personajes y control tactico.",
+  "carcassonne-big-box": "Colocacion de losetas para construir ciudades, caminos y campos, con mucho contenido reunido en una sola caja.",
+  dany: "Juego de identidad y comunicacion donde una mente fragmentada intenta coordinarse mientras una personalidad oculta sabotea.",
+  "tiny-epic-dungeons": "Dungeon crawler compacto con exploracion modular, enemigos, botin y combates cooperativos contra jefes.",
+  "unstable-unicorns": "Cartas caoticas de coleccion y sabotaje donde cada jugador intenta armar su establo antes que los demas.",
+  "king-of-tokyo": "Dados, monstruos gigantes y golpes directos por el control de Tokyo, con poderes que cambian cada partida.",
+  "four-souls": "Juego de cartas competitivo inspirado en The Binding of Isaac, con botin, monstruos y combos agresivos.",
+  "death-may-die": "Cooperativo de miniaturas y horror pulp donde los investigadores intentan interrumpir rituales antes del desastre final.",
+  "tiny-cthulhu": "Cooperativo compacto de horror cosmico con decisiones tacticas, amenaza creciente y gestion de recursos.",
+  mindbug: "Duelo de cartas minimalista donde cada criatura fuerte puede ser robada por el rival en el momento mas doloroso.",
+  "war-ring-card": "Juego de cartas estrategico sobre la Guerra del Anillo, con bandos, escenarios y control de frentes clave.",
+  "tiny-zombies": "Supervivencia contra zombis en formato compacto, con modos cooperativos y competitivos alrededor de un centro comercial.",
+  "coc-maldon": "Juego de preguntas para medir conocimiento, memoria y rapidez en una experiencia independiente de trivia.",
+};
 const typeFilters = ["Todos", ...Array.from(new Set(Object.values(gameMeta).map((meta) => meta.gameType))).sort()];
 const playerFilters = ["Todos", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"];
 const randomTypeFilters = ["Cualquiera", ...typeFilters.filter((item) => item !== "Todos")];
@@ -467,10 +497,7 @@ export default function Home() {
                         </span>
                       </div>
                       <p className="mt-4 text-sm leading-6 text-[#cbd8c8]">
-                        {selectedGame.note ??
-                          (selectedExtras.length > 0
-                            ? "Esta ficha principal concentra su contenido asociado debajo."
-                            : "Este juego aparece solo como caja principal dentro de la biblioteca.")}
+                        {getGameDescription(selectedGame)}
                       </p>
                     </div>
 
@@ -572,10 +599,7 @@ export default function Home() {
                   </span>
                 </div>
                 <p className="mt-4 text-sm leading-6 text-[#cbd8c8]">
-                  {selectedGame.note ??
-                    (selectedExtras.length > 0
-                      ? "Esta ficha principal concentra su contenido asociado debajo."
-                      : "Este juego aparece solo como caja principal dentro de la biblioteca.")}
+                  {getGameDescription(selectedGame)}
                 </p>
               </div>
             </div>
@@ -710,6 +734,7 @@ export default function Home() {
                         </p>
                       </div>
                     ) : null}
+                    <p className="mt-4 text-sm leading-6 text-[#cbd8c8]">{getGameDescription(randomGame)}</p>
                   </div>
                 </div>
               ) : (
@@ -793,6 +818,14 @@ function LibrarySection({
 
 function getImageSrc(item: LibraryItem) {
   return item.image ?? getCoverDataUri(item);
+}
+
+function getGameDescription(item: LibraryItem) {
+  return (
+    gameDescriptions[item.id] ??
+    item.note ??
+    "Ficha principal de la ludoteca, lista para completar con notas propias de partidas o reglas caseras."
+  );
 }
 
 function supportsPlayerCount(playerRange: string, selectedPlayers: string) {
