@@ -93,6 +93,10 @@ const gameMeta: Record<string, { gameType: string; players: string }> = {
   "war-ring-card": { gameType: "Card", players: "2-4" },
   "tiny-zombies": { gameType: "Horror", players: "1-5" },
 };
+const typeFilters = ["Todos", ...Array.from(new Set(Object.values(gameMeta).map((meta) => meta.gameType))).sort()];
+const playerFilters = ["Todos", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10+"];
+const randomTypeFilters = ["Cualquiera", ...typeFilters.filter((item) => item !== "Todos")];
+const randomPlayerFilters = ["Cualquiera", ...playerFilters.filter((item) => item !== "Todos")];
 
 const formatStyles: Record<LibraryItem["format"], string> = {
   "Juego base": "bg-sky-400/15 text-sky-100 border-sky-300/20",
@@ -125,7 +129,14 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState<(typeof statuses)[number]>("Todos");
   const [sortBy, setSortBy] = useState<(typeof sorts)[number]>("Orden alfabetico");
+  const [selectedType, setSelectedType] = useState("Todos");
+  const [selectedPlayers, setSelectedPlayers] = useState("Todos");
   const [selectedId, setSelectedId] = useState<string>(allBaseGames[0]?.id ?? "");
+  const [randomModalOpen, setRandomModalOpen] = useState(false);
+  const [randomType, setRandomType] = useState("Cualquiera");
+  const [randomPlayers, setRandomPlayers] = useState("Cualquiera");
+  const [randomGame, setRandomGame] = useState<LibraryItem | null>(null);
+  const [detailModalOpen, setDetailModalOpen] = useState(false);
   const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({
     withExtras: false,
     baseOnly: false,
@@ -140,8 +151,10 @@ export default function Home() {
         extras: library.filter((item) => item.relatedTo === game.id),
       }))
       .filter(({ game, extras }) => {
+        const meta = gameMeta[game.id];
         const haystack = [game.title, game.category, game.family, game.note]
           .concat(extras.flatMap((item) => [item.title, item.family, item.note]))
+          .concat(meta ? [meta.gameType, meta.players] : [])
           .filter(Boolean)
           .join(" ")
           .toLowerCase();
@@ -151,8 +164,11 @@ export default function Home() {
           status === "Todos" ||
           (status === "Con extras" && extras.length > 0) ||
           (status === "Solo base" && extras.length === 0);
+        const matchesType = selectedType === "Todos" || meta?.gameType === selectedType;
+        const matchesPlayers =
+          selectedPlayers === "Todos" || (meta ? supportsPlayerCount(meta.players, selectedPlayers) : false);
 
-        return matchesText && matchesStatus;
+        return matchesText && matchesStatus && matchesType && matchesPlayers;
       });
 
     const sorted = [...games].sort((left, right) => {
@@ -168,7 +184,7 @@ export default function Home() {
     });
 
     return sorted;
-  }, [query, sortBy, status]);
+  }, [query, selectedPlayers, selectedType, sortBy, status]);
 
   const selectedEntry =
     visibleGames.find((entry) => entry.game.id === selectedId) ??
@@ -179,12 +195,73 @@ export default function Home() {
   const selectedExtras = selectedEntry?.extras ?? [];
   const gamesWithExtras = allBaseGames.filter((game) => library.some((item) => item.relatedTo === game.id));
   const gamesWithoutExtras = allBaseGames.filter((game) => !library.some((item) => item.relatedTo === game.id));
+  const randomCandidates = useMemo(
+    () =>
+      allBaseGames.filter((game) => {
+        const meta = gameMeta[game.id];
+        const matchesType = randomType === "Cualquiera" || meta?.gameType === randomType;
+        const matchesPlayers =
+          randomPlayers === "Cualquiera" || (meta ? supportsPlayerCount(meta.players, randomPlayers) : false);
+
+        return matchesType && matchesPlayers;
+      }),
+    [randomPlayers, randomType],
+  );
+
+  function chooseRandomGame() {
+    if (randomCandidates.length === 0) {
+      setRandomGame(null);
+      return;
+    }
+
+    const nextGame = randomCandidates[Math.floor(Math.random() * randomCandidates.length)];
+    setRandomGame(nextGame);
+    setSelectedId(nextGame.id);
+  }
+
+  function selectGame(gameId: string) {
+    setSelectedId(gameId);
+
+    if (window.matchMedia("(max-width: 1279px)").matches) {
+      setDetailModalOpen(true);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-[#414735] text-[#f0f4e8]">
       <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)]">
-        <aside className="border-r border-black/30 bg-[#3b4130] shadow-[inset_-1px_0_0_rgba(255,255,255,0.05)]">
+        <div className="border-b border-black/25 bg-[#3b4130] p-3 lg:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              setRandomModalOpen(true);
+              setRandomGame(null);
+            }}
+            className="mb-3 w-full rounded-sm border border-[#91a277] bg-[#667154] px-3 py-2 text-left text-sm font-medium text-[#f6fbef] transition hover:bg-[#748061]"
+          >
+            Juego aleatorio
+          </button>
+          <div className="rounded-sm border border-[#748061] bg-[#434a37] px-3 py-2">
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Buscar en tu biblioteca"
+              className="w-full bg-transparent text-sm text-[#f6fbf0] outline-none placeholder:text-[#b8c3a9]"
+            />
+          </div>
+        </div>
+        <aside className="hidden border-r border-black/30 bg-[#3b4130] shadow-[inset_-1px_0_0_rgba(255,255,255,0.05)] lg:block">
           <div className="border-b border-black/25 p-3">
+            <button
+              type="button"
+              onClick={() => {
+                setRandomModalOpen(true);
+                setRandomGame(null);
+              }}
+              className="mb-3 w-full rounded-sm border border-[#91a277] bg-[#667154] px-3 py-2 text-left text-sm font-medium text-[#f6fbef] transition hover:bg-[#748061]"
+            >
+              Juego aleatorio
+            </button>
             <div className="rounded-sm border border-[#748061] bg-[#434a37] px-3 py-2">
               <input
                 value={query}
@@ -230,7 +307,7 @@ export default function Home() {
         </aside>
 
         <section className="flex min-h-screen flex-col bg-[#454c39]">
-          <div className="border-b border-black/25 px-8 py-7">
+          <div className="border-b border-black/25 px-4 py-6 sm:px-8 sm:py-7">
             <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
               <div>
                 <div className="flex items-center gap-3">
@@ -256,11 +333,41 @@ export default function Home() {
                     );
                   })}
                 </div>
+                <div className="mt-4 flex flex-wrap gap-5">
+                  <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#cad4bd]">
+                    Tipo de juego
+                    <select
+                      value={selectedType}
+                      onChange={(event) => setSelectedType(event.target.value)}
+                      className="w-56 rounded-sm border border-[#748061] bg-[#556049] px-3 py-2 text-sm normal-case tracking-normal text-[#f6fbef] outline-none"
+                    >
+                      {typeFilters.map((item) => (
+                        <option key={item} value={item}>
+                          {item}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                  <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#cad4bd]">
+                    Jugadores
+                    <select
+                      value={selectedPlayers}
+                      onChange={(event) => setSelectedPlayers(event.target.value)}
+                      className="w-44 rounded-sm border border-[#748061] bg-[#556049] px-3 py-2 text-sm normal-case tracking-normal text-[#f6fbef] outline-none"
+                    >
+                      {playerFilters.map((item) => (
+                        <option key={item} value={item}>
+                          {item === "Todos" ? item : `${item} jugador${item === "1" ? "" : "es"}`}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="flex-1 px-8 py-6">
+          <div className="flex-1 px-4 py-5 sm:px-8 sm:py-6">
             <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className="text-sm uppercase tracking-[0.22em] text-[#cad4bd]">
                 {selectedGame ? `${selectedGame.title} ${selectedExtras.length > 0 ? `(${selectedExtras.length} extras)` : "(sin extras)"}` : "Sin seleccion"}
@@ -283,12 +390,12 @@ export default function Home() {
 
             <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
               <div>
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-6">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] sm:gap-6">
                   {visibleGames.map(({ game, extras }) => (
                     <button
                       key={game.id}
                       type="button"
-                      onClick={() => setSelectedId(game.id)}
+                      onClick={() => selectGame(game.id)}
                       className="group text-left"
                     >
                       <div
@@ -325,7 +432,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <aside className="space-y-4 border border-black/30 bg-[#3d4332] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+              <aside className="hidden space-y-4 border border-black/30 bg-[#3d4332] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] xl:block">
                 {selectedGame ? (
                   <>
                     <div className="relative aspect-[3/4] overflow-hidden border border-black/35">
@@ -409,6 +516,213 @@ export default function Home() {
           </div>
         </section>
       </div>
+
+      {detailModalOpen && selectedGame ? (
+        <div className="fixed inset-0 z-40 grid place-items-center bg-black/55 p-4 xl:hidden">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="game-detail-title"
+            className="max-h-[90vh] w-full max-w-md overflow-y-auto border border-[#8a9872] bg-[#3d4332] p-4 shadow-[0_22px_80px_rgba(0,0,0,0.45)]"
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-[#566149] pb-3">
+              <div>
+                <h2 id="game-detail-title" className="text-xl font-light text-[#f4f8ec]">
+                  {selectedGame.title}
+                </h2>
+                <p className="mt-1 text-sm text-[#c7d2bc]">{selectedGame.family ?? selectedGame.category}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setDetailModalOpen(false)}
+                className="border border-[#748061] bg-[#4b5340] px-3 py-1.5 text-sm text-[#f6fbef]"
+              >
+                Cerrar
+              </button>
+            </div>
+
+            <div className="mt-4 grid gap-4 sm:grid-cols-[140px_minmax(0,1fr)]">
+              <div className="relative aspect-[3/4] overflow-hidden border border-black/35">
+                <Image
+                  src={getImageSrc(selectedGame)}
+                  alt={`Portada de ${selectedGame.title}`}
+                  fill
+                  unoptimized
+                  sizes="140px"
+                  className="object-cover"
+                />
+              </div>
+              <div>
+                {gameMeta[selectedGame.id] ? (
+                  <div className="grid gap-2 text-sm text-[#e2e9d6]">
+                    <p>
+                      <span className="text-[#aeb9a1]">Jugadores:</span> {gameMeta[selectedGame.id].players}
+                    </p>
+                    <p>
+                      <span className="text-[#aeb9a1]">Tipo:</span> {gameMeta[selectedGame.id].gameType}
+                    </p>
+                  </div>
+                ) : null}
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <span className={`rounded-sm border px-2 py-1 text-xs ${formatStyles[selectedGame.format]}`}>
+                    {selectedGame.format}
+                  </span>
+                  <span className="rounded-sm border border-[#667154] bg-[#505845] px-2 py-1 text-xs text-[#e4ead8]">
+                    {selectedExtras.length} extras
+                  </span>
+                </div>
+                <p className="mt-4 text-sm leading-6 text-[#d7e0cb]">
+                  {selectedGame.note ??
+                    (selectedExtras.length > 0
+                      ? "Esta ficha principal concentra su contenido asociado debajo."
+                      : "Este juego aparece solo como caja principal dentro de la biblioteca.")}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 border-t border-[#566149] pt-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-[#cad4bd]">Contenido asociado</p>
+              <div className="mt-3 space-y-3">
+                {selectedExtras.length > 0 ? (
+                  selectedExtras.map((item) => (
+                    <div key={item.id} className="flex gap-3 border border-black/25 bg-[#4b5340] p-3">
+                      <Image
+                        src={getImageSrc(item)}
+                        alt={`Portada de ${item.title}`}
+                        width={58}
+                        height={84}
+                        unoptimized
+                        className="h-[84px] w-[58px] border border-black/25 object-cover"
+                      />
+                      <div className="min-w-0">
+                        <p className="text-sm text-[#f3f7eb]">{item.title}</p>
+                        <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#c5d0b9]">{item.format}</p>
+                        {item.copies ? <p className="mt-2 text-xs text-[#d4deca]">Copias: {item.copies}</p> : null}
+                        {item.note ? <p className="mt-2 text-xs text-[#d4deca]">{item.note}</p> : null}
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="border border-dashed border-[#6b7758] bg-[#47503b] p-3 text-sm text-[#d3ddc6]">
+                    No hay expansiones, libros o material extra vinculado.
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {randomModalOpen ? (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/55 p-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="random-game-title"
+            className="w-full max-w-2xl border border-[#8a9872] bg-[#3d4332] p-5 shadow-[0_22px_80px_rgba(0,0,0,0.45)]"
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-[#566149] pb-4">
+              <div>
+                <h2 id="random-game-title" className="text-2xl font-light text-[#f4f8ec]">
+                  Juego aleatorio
+                </h2>
+                <p className="mt-1 text-sm text-[#c7d2bc]">{randomCandidates.length} candidatos disponibles</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setRandomModalOpen(false)}
+                className="border border-[#748061] bg-[#4b5340] px-3 py-1.5 text-sm text-[#f6fbef] transition hover:bg-[#59634d]"
+              >
+                Cerrar
+              </button>
+            </div>
+
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#cad4bd]">
+                Tipo de juego
+                <select
+                  value={randomType}
+                  onChange={(event) => {
+                    setRandomType(event.target.value);
+                    setRandomGame(null);
+                  }}
+                  className="rounded-sm border border-[#748061] bg-[#556049] px-3 py-2 text-sm normal-case tracking-normal text-[#f6fbef] outline-none"
+                >
+                  {randomTypeFilters.map((item) => (
+                    <option key={item} value={item}>
+                      {item}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#cad4bd]">
+                Jugadores
+                <select
+                  value={randomPlayers}
+                  onChange={(event) => {
+                    setRandomPlayers(event.target.value);
+                    setRandomGame(null);
+                  }}
+                  className="rounded-sm border border-[#748061] bg-[#556049] px-3 py-2 text-sm normal-case tracking-normal text-[#f6fbef] outline-none"
+                >
+                  {randomPlayerFilters.map((item) => (
+                    <option key={item} value={item}>
+                      {item === "Cualquiera" ? item : `${item} jugador${item === "1" ? "" : "es"}`}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <button
+              type="button"
+              onClick={chooseRandomGame}
+              className="mt-5 w-full border border-[#9aaa80] bg-[#71805e] px-4 py-2.5 text-sm font-medium text-[#f8fbed] transition hover:bg-[#7f8e69] disabled:cursor-not-allowed disabled:opacity-50"
+              disabled={randomCandidates.length === 0}
+            >
+              Sortear juego
+            </button>
+
+            <div className="mt-5 min-h-44 border border-[#566149] bg-[#454c39] p-4">
+              {randomGame ? (
+                <div className="grid gap-4 sm:grid-cols-[120px_minmax(0,1fr)]">
+                  <div className="relative aspect-[3/4] overflow-hidden border border-black/35">
+                    <Image
+                      src={getImageSrc(randomGame)}
+                      alt={`Portada de ${randomGame.title}`}
+                      fill
+                      unoptimized
+                      sizes="120px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.22em] text-[#cad4bd]">Resultado</p>
+                    <h3 className="mt-2 text-2xl font-light text-[#f4f8ec]">{randomGame.title}</h3>
+                    <p className="mt-2 text-sm text-[#c7d2bc]">{randomGame.family ?? randomGame.category}</p>
+                    {gameMeta[randomGame.id] ? (
+                      <div className="mt-4 grid gap-2 text-sm text-[#e2e9d6]">
+                        <p>
+                          <span className="text-[#aeb9a1]">Jugadores:</span> {gameMeta[randomGame.id].players}
+                        </p>
+                        <p>
+                          <span className="text-[#aeb9a1]">Tipo:</span> {gameMeta[randomGame.id].gameType}
+                        </p>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex h-full min-h-36 items-center justify-center text-center text-sm text-[#c7d2bc]">
+                  {randomCandidates.length === 0
+                    ? "No hay juegos que coincidan con esos filtros."
+                    : "Elegí filtros y sorteá un juego para jugar."}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
@@ -479,6 +793,26 @@ function LibrarySection({
 
 function getImageSrc(item: LibraryItem) {
   return item.image ?? getCoverDataUri(item);
+}
+
+function supportsPlayerCount(playerRange: string, selectedPlayers: string) {
+  const selected = selectedPlayers === "10+" ? 10 : Number(selectedPlayers);
+
+  if (Number.isNaN(selected)) {
+    return true;
+  }
+
+  if (playerRange.endsWith("+")) {
+    return selected >= Number(playerRange.replace("+", ""));
+  }
+
+  const [min, max] = playerRange.split("-").map(Number);
+
+  if (Number.isNaN(max)) {
+    return selected === min;
+  }
+
+  return selected >= min && selected <= max;
 }
 
 function getCoverDataUri(item: LibraryItem) {
