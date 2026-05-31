@@ -228,29 +228,29 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-[#414735] text-[#f0f4e8]">
+    <main className="min-h-screen bg-[radial-gradient(circle_at_18%_0%,rgba(47,143,120,0.20),transparent_28%),radial-gradient(circle_at_88%_12%,rgba(184,155,94,0.10),transparent_24%),linear-gradient(180deg,#07100e_0%,#081512_42%,#030806_100%)] text-[#e8ead7]">
       <div className="grid min-h-screen grid-cols-1 lg:grid-cols-[360px_minmax(0,1fr)]">
-        <div className="border-b border-black/25 bg-[#3b4130] p-3 lg:hidden">
+        <div className="border-b border-black/25 bg-[#0b1714] p-3 lg:hidden">
           <button
             type="button"
             onClick={() => {
               setRandomModalOpen(true);
               setRandomGame(null);
             }}
-            className="mb-3 w-full rounded-sm border border-[#91a277] bg-[#667154] px-3 py-2 text-left text-sm font-medium text-[#f6fbef] transition hover:bg-[#748061]"
+            className="mb-3 w-full rounded-sm border border-[#b89b5e] bg-[#29473b] px-3 py-2 text-left text-sm font-medium text-[#eef1de] transition hover:bg-[#3f6b58]"
           >
             Juego aleatorio
           </button>
-          <div className="rounded-sm border border-[#748061] bg-[#434a37] px-3 py-2">
+          <div className="rounded-sm border border-[#3f6b58] bg-[#10211d] px-3 py-2">
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Buscar en tu biblioteca"
-              className="w-full bg-transparent text-sm text-[#f6fbf0] outline-none placeholder:text-[#b8c3a9]"
+              className="w-full bg-transparent text-sm text-[#eef1de] outline-none placeholder:text-[#7f968b]"
             />
           </div>
         </div>
-        <aside className="hidden border-r border-black/30 bg-[#3b4130] shadow-[inset_-1px_0_0_rgba(255,255,255,0.05)] lg:block">
+        <aside className="hidden border-r border-black/30 bg-[#0b1714] shadow-[inset_-1px_0_0_rgba(255,255,255,0.05)] lg:block">
           <div className="border-b border-black/25 p-3">
             <button
               type="button"
@@ -258,16 +258,16 @@ export default function Home() {
                 setRandomModalOpen(true);
                 setRandomGame(null);
               }}
-              className="mb-3 w-full rounded-sm border border-[#91a277] bg-[#667154] px-3 py-2 text-left text-sm font-medium text-[#f6fbef] transition hover:bg-[#748061]"
+              className="mb-3 w-full rounded-sm border border-[#b89b5e] bg-[#29473b] px-3 py-2 text-left text-sm font-medium text-[#eef1de] transition hover:bg-[#3f6b58]"
             >
               Juego aleatorio
             </button>
-            <div className="rounded-sm border border-[#748061] bg-[#434a37] px-3 py-2">
+            <div className="rounded-sm border border-[#3f6b58] bg-[#10211d] px-3 py-2">
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="Buscar en tu biblioteca"
-                className="w-full bg-transparent text-sm text-[#f6fbf0] outline-none placeholder:text-[#b8c3a9]"
+                className="w-full bg-transparent text-sm text-[#eef1de] outline-none placeholder:text-[#7f968b]"
               />
             </div>
           </div>
@@ -306,13 +306,13 @@ export default function Home() {
           </div>
         </aside>
 
-        <section className="flex min-h-screen flex-col bg-[#454c39]">
+        <section className="flex min-h-screen flex-col bg-[#0f1f1b]">
           <div className="border-b border-black/25 px-4 py-6 sm:px-8 sm:py-7">
             <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
               <div>
                 <div className="flex items-center gap-3">
-                  <h1 className="text-[32px] font-light tracking-[0.18em] text-[#f4f7ed]">Juegos</h1>
-                  <span className="text-lg text-[#bac5ae]">({visibleGames.length}/{allBaseGames.length})</span>
+                  <h1 className="text-[32px] font-light tracking-[0.18em] text-[#f1ead2]">Juegos</h1>
+                  <span className="text-lg text-[#91a99d]">({visibleGames.length}/{allBaseGames.length})</span>
                 </div>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {statuses.map((item) => {
@@ -324,8 +324,8 @@ export default function Home() {
                         onClick={() => setStatus(item)}
                         className={`rounded-sm border px-4 py-1.5 text-sm transition ${
                           active
-                            ? "border-[#8a9872] bg-[#6f7d58] text-[#f8fbed]"
-                            : "border-[#556049] bg-[#59634d] text-[#d7e0ca] hover:bg-[#667054]"
+                            ? "border-[#b89b5e] bg-[#3b6b55] text-[#f3ecd4]"
+                            : "border-[#1b342b] bg-[#213d33] text-[#c9d5c3] hover:bg-[#2a4b3d]"
                         }`}
                       >
                         {item}
@@ -334,12 +334,12 @@ export default function Home() {
                   })}
                 </div>
                 <div className="mt-4 flex flex-wrap gap-5">
-                  <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#cad4bd]">
+                  <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#aebdaa]">
                     Tipo de juego
                     <select
                       value={selectedType}
                       onChange={(event) => setSelectedType(event.target.value)}
-                      className="w-56 rounded-sm border border-[#748061] bg-[#556049] px-3 py-2 text-sm normal-case tracking-normal text-[#f6fbef] outline-none"
+                      className="w-56 rounded-sm border border-[#3f6b58] bg-[#1b342b] px-3 py-2 text-sm normal-case tracking-normal text-[#eef1de] outline-none"
                     >
                       {typeFilters.map((item) => (
                         <option key={item} value={item}>
@@ -348,12 +348,12 @@ export default function Home() {
                       ))}
                     </select>
                   </label>
-                  <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#cad4bd]">
+                  <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#aebdaa]">
                     Jugadores
                     <select
                       value={selectedPlayers}
                       onChange={(event) => setSelectedPlayers(event.target.value)}
-                      className="w-44 rounded-sm border border-[#748061] bg-[#556049] px-3 py-2 text-sm normal-case tracking-normal text-[#f6fbef] outline-none"
+                      className="w-44 rounded-sm border border-[#3f6b58] bg-[#1b342b] px-3 py-2 text-sm normal-case tracking-normal text-[#eef1de] outline-none"
                     >
                       {playerFilters.map((item) => (
                         <option key={item} value={item}>
@@ -369,15 +369,15 @@ export default function Home() {
 
           <div className="flex-1 px-4 py-5 sm:px-8 sm:py-6">
             <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-              <div className="text-sm uppercase tracking-[0.22em] text-[#cad4bd]">
+              <div className="text-sm uppercase tracking-[0.22em] text-[#aebdaa]">
                 {selectedGame ? `${selectedGame.title} ${selectedExtras.length > 0 ? `(${selectedExtras.length} extras)` : "(sin extras)"}` : "Sin seleccion"}
               </div>
-              <label className="flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-[#cad4bd]">
+              <label className="flex items-center gap-3 text-xs uppercase tracking-[0.18em] text-[#aebdaa]">
                 Ordenar por
                 <select
                   value={sortBy}
                   onChange={(event) => setSortBy(event.target.value as (typeof sorts)[number])}
-                  className="rounded-sm border border-[#748061] bg-[#556049] px-3 py-2 text-sm uppercase tracking-normal text-[#f6fbef] outline-none"
+                  className="rounded-sm border border-[#3f6b58] bg-[#1b342b] px-3 py-2 text-sm uppercase tracking-normal text-[#eef1de] outline-none"
                 >
                   {sorts.map((item) => (
                     <option key={item} value={item}>
@@ -419,10 +419,10 @@ export default function Home() {
                         ) : null}
                       </div>
                       <div className="mt-2">
-                        <p className="line-clamp-2 text-sm text-[#f4f7eb]">{game.title}</p>
-                        <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#c4ceba]">{game.category}</p>
+                        <p className="line-clamp-2 text-sm text-[#f1ead2]">{game.title}</p>
+                        <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#92a89c]">{game.category}</p>
                         {gameMeta[game.id] ? (
-                          <p className="mt-1 text-xs text-[#aeb9a1]">
+                          <p className="mt-1 text-xs text-[#7f968b]">
                             {gameMeta[game.id].players} jugadores · {gameMeta[game.id].gameType}
                           </p>
                         ) : null}
@@ -432,7 +432,7 @@ export default function Home() {
                 </div>
               </div>
 
-              <aside className="hidden space-y-4 border border-black/30 bg-[#3d4332] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] xl:block">
+              <aside className="hidden space-y-4 border border-black/30 bg-[#0d1b18] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] xl:block">
                 {selectedGame ? (
                   <>
                     <div className="relative aspect-[3/4] overflow-hidden border border-black/35">
@@ -446,15 +446,15 @@ export default function Home() {
                       />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-light text-[#f4f8ec]">{selectedGame.title}</h2>
-                      <p className="mt-1 text-sm text-[#c7d2bc]">{selectedGame.family ?? selectedGame.category}</p>
+                      <h2 className="text-2xl font-light text-[#f1ead2]">{selectedGame.title}</h2>
+                      <p className="mt-1 text-sm text-[#9fb3a6]">{selectedGame.family ?? selectedGame.category}</p>
                       {gameMeta[selectedGame.id] ? (
-                        <div className="mt-3 grid gap-2 text-sm text-[#e2e9d6]">
+                        <div className="mt-3 grid gap-2 text-sm text-[#dce4cf]">
                           <p>
-                            <span className="text-[#aeb9a1]">Jugadores:</span> {gameMeta[selectedGame.id].players}
+                            <span className="text-[#7f968b]">Jugadores:</span> {gameMeta[selectedGame.id].players}
                           </p>
                           <p>
-                            <span className="text-[#aeb9a1]">Tipo:</span> {gameMeta[selectedGame.id].gameType}
+                            <span className="text-[#7f968b]">Tipo:</span> {gameMeta[selectedGame.id].gameType}
                           </p>
                         </div>
                       ) : null}
@@ -462,11 +462,11 @@ export default function Home() {
                         <span className={`rounded-sm border px-2 py-1 text-xs ${formatStyles[selectedGame.format]}`}>
                           {selectedGame.format}
                         </span>
-                        <span className="rounded-sm border border-[#667154] bg-[#505845] px-2 py-1 text-xs text-[#e4ead8]">
+                        <span className="rounded-sm border border-[#29473b] bg-[#182d25] px-2 py-1 text-xs text-[#dde5cf]">
                           {selectedExtras.length} extras
                         </span>
                       </div>
-                      <p className="mt-4 text-sm leading-6 text-[#d7e0cb]">
+                      <p className="mt-4 text-sm leading-6 text-[#cbd8c8]">
                         {selectedGame.note ??
                           (selectedExtras.length > 0
                             ? "Esta ficha principal concentra su contenido asociado debajo."
@@ -474,14 +474,14 @@ export default function Home() {
                       </p>
                     </div>
 
-                    <div className="border-t border-[#566149] pt-4">
-                      <p className="text-xs uppercase tracking-[0.24em] text-[#cad4bd]">
+                    <div className="border-t border-[#28463a] pt-4">
+                      <p className="text-xs uppercase tracking-[0.24em] text-[#aebdaa]">
                         Contenido asociado
                       </p>
                       <div className="mt-3 space-y-3">
                         {selectedExtras.length > 0 ? (
                           selectedExtras.map((item) => (
-                            <div key={item.id} className="flex gap-3 border border-black/25 bg-[#4b5340] p-3">
+                            <div key={item.id} className="flex gap-3 border border-black/25 bg-[#14251f] p-3">
                               <Image
                                 src={getImageSrc(item)}
                                 alt={`Portada de ${item.title}`}
@@ -523,19 +523,19 @@ export default function Home() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="game-detail-title"
-            className="max-h-[90vh] w-full max-w-md overflow-y-auto border border-[#8a9872] bg-[#3d4332] p-4 shadow-[0_22px_80px_rgba(0,0,0,0.45)]"
+            className="max-h-[90vh] w-full max-w-md overflow-y-auto border border-[#b89b5e] bg-[#0d1b18] p-4 shadow-[0_22px_80px_rgba(0,0,0,0.45)]"
           >
-            <div className="flex items-start justify-between gap-4 border-b border-[#566149] pb-3">
+            <div className="flex items-start justify-between gap-4 border-b border-[#28463a] pb-3">
               <div>
-                <h2 id="game-detail-title" className="text-xl font-light text-[#f4f8ec]">
+                <h2 id="game-detail-title" className="text-xl font-light text-[#f1ead2]">
                   {selectedGame.title}
                 </h2>
-                <p className="mt-1 text-sm text-[#c7d2bc]">{selectedGame.family ?? selectedGame.category}</p>
+                <p className="mt-1 text-sm text-[#9fb3a6]">{selectedGame.family ?? selectedGame.category}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setDetailModalOpen(false)}
-                className="border border-[#748061] bg-[#4b5340] px-3 py-1.5 text-sm text-[#f6fbef]"
+                className="border border-[#3f6b58] bg-[#14251f] px-3 py-1.5 text-sm text-[#eef1de]"
               >
                 Cerrar
               </button>
@@ -554,12 +554,12 @@ export default function Home() {
               </div>
               <div>
                 {gameMeta[selectedGame.id] ? (
-                  <div className="grid gap-2 text-sm text-[#e2e9d6]">
+                  <div className="grid gap-2 text-sm text-[#dce4cf]">
                     <p>
-                      <span className="text-[#aeb9a1]">Jugadores:</span> {gameMeta[selectedGame.id].players}
+                      <span className="text-[#7f968b]">Jugadores:</span> {gameMeta[selectedGame.id].players}
                     </p>
                     <p>
-                      <span className="text-[#aeb9a1]">Tipo:</span> {gameMeta[selectedGame.id].gameType}
+                      <span className="text-[#7f968b]">Tipo:</span> {gameMeta[selectedGame.id].gameType}
                     </p>
                   </div>
                 ) : null}
@@ -567,11 +567,11 @@ export default function Home() {
                   <span className={`rounded-sm border px-2 py-1 text-xs ${formatStyles[selectedGame.format]}`}>
                     {selectedGame.format}
                   </span>
-                  <span className="rounded-sm border border-[#667154] bg-[#505845] px-2 py-1 text-xs text-[#e4ead8]">
+                  <span className="rounded-sm border border-[#29473b] bg-[#182d25] px-2 py-1 text-xs text-[#dde5cf]">
                     {selectedExtras.length} extras
                   </span>
                 </div>
-                <p className="mt-4 text-sm leading-6 text-[#d7e0cb]">
+                <p className="mt-4 text-sm leading-6 text-[#cbd8c8]">
                   {selectedGame.note ??
                     (selectedExtras.length > 0
                       ? "Esta ficha principal concentra su contenido asociado debajo."
@@ -580,12 +580,12 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="mt-4 border-t border-[#566149] pt-4">
-              <p className="text-xs uppercase tracking-[0.24em] text-[#cad4bd]">Contenido asociado</p>
+            <div className="mt-4 border-t border-[#28463a] pt-4">
+              <p className="text-xs uppercase tracking-[0.24em] text-[#aebdaa]">Contenido asociado</p>
               <div className="mt-3 space-y-3">
                 {selectedExtras.length > 0 ? (
                   selectedExtras.map((item) => (
-                    <div key={item.id} className="flex gap-3 border border-black/25 bg-[#4b5340] p-3">
+                    <div key={item.id} className="flex gap-3 border border-black/25 bg-[#14251f] p-3">
                       <Image
                         src={getImageSrc(item)}
                         alt={`Portada de ${item.title}`}
@@ -619,26 +619,26 @@ export default function Home() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="random-game-title"
-            className="w-full max-w-2xl border border-[#8a9872] bg-[#3d4332] p-5 shadow-[0_22px_80px_rgba(0,0,0,0.45)]"
+            className="w-full max-w-2xl border border-[#b89b5e] bg-[#0d1b18] p-5 shadow-[0_22px_80px_rgba(0,0,0,0.45)]"
           >
-            <div className="flex items-start justify-between gap-4 border-b border-[#566149] pb-4">
+            <div className="flex items-start justify-between gap-4 border-b border-[#28463a] pb-4">
               <div>
-                <h2 id="random-game-title" className="text-2xl font-light text-[#f4f8ec]">
+                <h2 id="random-game-title" className="text-2xl font-light text-[#f1ead2]">
                   Juego aleatorio
                 </h2>
-                <p className="mt-1 text-sm text-[#c7d2bc]">{randomCandidates.length} candidatos disponibles</p>
+                <p className="mt-1 text-sm text-[#9fb3a6]">{randomCandidates.length} candidatos disponibles</p>
               </div>
               <button
                 type="button"
                 onClick={() => setRandomModalOpen(false)}
-                className="border border-[#748061] bg-[#4b5340] px-3 py-1.5 text-sm text-[#f6fbef] transition hover:bg-[#59634d]"
+                className="border border-[#3f6b58] bg-[#14251f] px-3 py-1.5 text-sm text-[#eef1de] transition hover:bg-[#213d33]"
               >
                 Cerrar
               </button>
             </div>
 
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#cad4bd]">
+              <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#aebdaa]">
                 Tipo de juego
                 <select
                   value={randomType}
@@ -646,7 +646,7 @@ export default function Home() {
                     setRandomType(event.target.value);
                     setRandomGame(null);
                   }}
-                  className="rounded-sm border border-[#748061] bg-[#556049] px-3 py-2 text-sm normal-case tracking-normal text-[#f6fbef] outline-none"
+                  className="rounded-sm border border-[#3f6b58] bg-[#1b342b] px-3 py-2 text-sm normal-case tracking-normal text-[#eef1de] outline-none"
                 >
                   {randomTypeFilters.map((item) => (
                     <option key={item} value={item}>
@@ -655,7 +655,7 @@ export default function Home() {
                   ))}
                 </select>
               </label>
-              <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#cad4bd]">
+              <label className="grid gap-1 text-xs uppercase tracking-[0.18em] text-[#aebdaa]">
                 Jugadores
                 <select
                   value={randomPlayers}
@@ -663,7 +663,7 @@ export default function Home() {
                     setRandomPlayers(event.target.value);
                     setRandomGame(null);
                   }}
-                  className="rounded-sm border border-[#748061] bg-[#556049] px-3 py-2 text-sm normal-case tracking-normal text-[#f6fbef] outline-none"
+                  className="rounded-sm border border-[#3f6b58] bg-[#1b342b] px-3 py-2 text-sm normal-case tracking-normal text-[#eef1de] outline-none"
                 >
                   {randomPlayerFilters.map((item) => (
                     <option key={item} value={item}>
@@ -677,13 +677,13 @@ export default function Home() {
             <button
               type="button"
               onClick={chooseRandomGame}
-              className="mt-5 w-full border border-[#9aaa80] bg-[#71805e] px-4 py-2.5 text-sm font-medium text-[#f8fbed] transition hover:bg-[#7f8e69] disabled:cursor-not-allowed disabled:opacity-50"
+              className="mt-5 w-full border border-[#c6a35a] bg-[#345d49] px-4 py-2.5 text-sm font-medium text-[#f3ecd4] transition hover:bg-[#3f6b58] disabled:cursor-not-allowed disabled:opacity-50"
               disabled={randomCandidates.length === 0}
             >
               Sortear juego
             </button>
 
-            <div className="mt-5 min-h-44 border border-[#566149] bg-[#454c39] p-4">
+            <div className="mt-5 min-h-44 border border-[#28463a] bg-[#0f1f1b] p-4">
               {randomGame ? (
                 <div className="grid gap-4 sm:grid-cols-[120px_minmax(0,1fr)]">
                   <div className="relative aspect-[3/4] overflow-hidden border border-black/35">
@@ -697,23 +697,23 @@ export default function Home() {
                     />
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-[0.22em] text-[#cad4bd]">Resultado</p>
-                    <h3 className="mt-2 text-2xl font-light text-[#f4f8ec]">{randomGame.title}</h3>
-                    <p className="mt-2 text-sm text-[#c7d2bc]">{randomGame.family ?? randomGame.category}</p>
+                    <p className="text-xs uppercase tracking-[0.22em] text-[#aebdaa]">Resultado</p>
+                    <h3 className="mt-2 text-2xl font-light text-[#f1ead2]">{randomGame.title}</h3>
+                    <p className="mt-2 text-sm text-[#9fb3a6]">{randomGame.family ?? randomGame.category}</p>
                     {gameMeta[randomGame.id] ? (
-                      <div className="mt-4 grid gap-2 text-sm text-[#e2e9d6]">
+                      <div className="mt-4 grid gap-2 text-sm text-[#dce4cf]">
                         <p>
-                          <span className="text-[#aeb9a1]">Jugadores:</span> {gameMeta[randomGame.id].players}
+                          <span className="text-[#7f968b]">Jugadores:</span> {gameMeta[randomGame.id].players}
                         </p>
                         <p>
-                          <span className="text-[#aeb9a1]">Tipo:</span> {gameMeta[randomGame.id].gameType}
+                          <span className="text-[#7f968b]">Tipo:</span> {gameMeta[randomGame.id].gameType}
                         </p>
                       </div>
                     ) : null}
                   </div>
                 </div>
               ) : (
-                <div className="flex h-full min-h-36 items-center justify-center text-center text-sm text-[#c7d2bc]">
+                <div className="flex h-full min-h-36 items-center justify-center text-center text-sm text-[#9fb3a6]">
                   {randomCandidates.length === 0
                     ? "No hay juegos que coincidan con esos filtros."
                     : "Elegí filtros y sorteá un juego para jugar."}
@@ -753,15 +753,15 @@ function LibrarySection({
         aria-expanded={!collapsed}
         aria-controls={`section-${sectionKey}`}
         onClick={onToggle}
-        className="mb-2 flex w-full items-center gap-2 text-left text-xs uppercase tracking-[0.22em] text-[#d4ddc8]"
+        className="mb-2 flex w-full items-center gap-2 text-left text-xs uppercase tracking-[0.22em] text-[#aebdaa]"
       >
-        <span className="w-3 text-[#e1c55a]">{collapsed ? "+" : "-"}</span>
+        <span className="w-3 text-[#c6a35a]">{collapsed ? "+" : "-"}</span>
         <span>{title}</span>
-        <span className="text-[#aeb9a1]">({count})</span>
+        <span className="text-[#7f968b]">({count})</span>
       </button>
       <div
         id={`section-${sectionKey}`}
-        className={`space-y-px overflow-hidden border border-black/20 bg-[#343a2a] ${collapsed ? "hidden" : ""}`}
+        className={`space-y-px overflow-hidden border border-black/20 bg-[#07100e] ${collapsed ? "hidden" : ""}`}
       >
         {entries.length > 0 ? (
           entries.map(({ game, extras }) => {
@@ -773,7 +773,7 @@ function LibrarySection({
                 type="button"
                 onClick={() => onSelect(game.id)}
                 className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition ${
-                  active ? "bg-[#59634d] text-[#f8fbed]" : "bg-[#454d39] text-[#dde5d1] hover:bg-[#4f5742]"
+                  active ? "bg-[#213d33] text-[#f3ecd4]" : "bg-[#10211d] text-[#dce4cf] hover:bg-[#18352b]"
                 }`}
               >
                 <span className="truncate pr-3">{game.title}</span>
@@ -784,7 +784,7 @@ function LibrarySection({
             );
           })
         ) : (
-          <div className="px-3 py-2 text-sm text-[#b9c3ad]">Sin resultados en esta seccion.</div>
+          <div className="px-3 py-2 text-sm text-[#8fa398]">Sin resultados en esta seccion.</div>
         )}
       </div>
     </section>

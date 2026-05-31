@@ -13,8 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Biblioteca Ludica",
+  title: "Ludoteca",
   description: "Catalogo personal de juegos de mesa, expansiones y libros relacionados.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
