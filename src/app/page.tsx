@@ -254,10 +254,7 @@ export default function Home() {
 
   function selectGame(gameId: string) {
     setSelectedId(gameId);
-
-    if (window.matchMedia("(max-width: 1279px)").matches) {
-      setDetailModalOpen(true);
-    }
+    setDetailModalOpen(true);
   }
 
   return (
@@ -312,7 +309,7 @@ export default function Home() {
               count={gamesWithExtras.length}
               entries={visibleGames.filter((entry) => entry.extras.length > 0)}
               selectedId={selectedId}
-              onSelect={setSelectedId}
+              onSelect={selectGame}
               collapsed={collapsedSections.withExtras}
               onToggle={() =>
                 setCollapsedSections((current) => ({
@@ -327,7 +324,7 @@ export default function Home() {
               count={gamesWithoutExtras.length}
               entries={visibleGames.filter((entry) => entry.extras.length === 0)}
               selectedId={selectedId}
-              onSelect={setSelectedId}
+              onSelect={selectGame}
               collapsed={collapsedSections.baseOnly}
               onToggle={() =>
                 setCollapsedSections((current) => ({
@@ -421,7 +418,7 @@ export default function Home() {
               </label>
             </div>
 
-            <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_320px]">
+            <div className="grid gap-8">
               <div>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-[repeat(auto-fill,minmax(180px,1fr))] sm:gap-6">
                   {visibleGames.map(({ game, extras }) => (
@@ -464,96 +461,22 @@ export default function Home() {
                   ))}
                 </div>
               </div>
-
-              <aside className="hidden space-y-4 border border-black/30 bg-[#0d1b18] p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] xl:block">
-                {selectedGame ? (
-                  <>
-                    <div className="relative aspect-[3/4] overflow-hidden border border-black/35">
-                      <Image
-                        src={getImageSrc(selectedGame)}
-                        alt={`Portada de ${selectedGame.title}`}
-                        fill
-                        unoptimized
-                        sizes="320px"
-                        className="object-cover"
-                      />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-light text-[#f1ead2]">{selectedGame.title}</h2>
-                      <p className="mt-1 text-sm text-[#9fb3a6]">{selectedGame.family ?? selectedGame.category}</p>
-                      {gameMeta[selectedGame.id] ? (
-                        <div className="mt-3 grid gap-2 text-sm text-[#dce4cf]">
-                          <p>
-                            <span className="text-[#7f968b]">Jugadores:</span> {gameMeta[selectedGame.id].players}
-                          </p>
-                          <p>
-                            <span className="text-[#7f968b]">Tipo:</span> {gameMeta[selectedGame.id].gameType}
-                          </p>
-                        </div>
-                      ) : null}
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <span className={`rounded-sm border px-2 py-1 text-xs ${formatStyles[selectedGame.format]}`}>
-                          {selectedGame.format}
-                        </span>
-                        <span className="rounded-sm border border-[#29473b] bg-[#182d25] px-2 py-1 text-xs text-[#dde5cf]">
-                          {selectedExtras.length} extras
-                        </span>
-                      </div>
-                      <p className="mt-4 text-sm leading-6 text-[#cbd8c8]">
-                        {getGameDescription(selectedGame)}
-                      </p>
-                    </div>
-
-                    <div className="border-t border-[#28463a] pt-4">
-                      <p className="text-xs uppercase tracking-[0.24em] text-[#aebdaa]">
-                        Contenido asociado
-                      </p>
-                      <div className="mt-3 space-y-3">
-                        {selectedExtras.length > 0 ? (
-                          selectedExtras.map((item) => (
-                            <div key={item.id} className="flex gap-3 border border-black/25 bg-[#14251f] p-3">
-                              <Image
-                                src={getImageSrc(item)}
-                                alt={`Portada de ${item.title}`}
-                                width={58}
-                                height={84}
-                                unoptimized
-                                className="h-[84px] w-[58px] border border-black/25 object-cover"
-                              />
-                              <div className="min-w-0">
-                                <p className="text-sm text-[#f3f7eb]">{item.title}</p>
-                                <p className="mt-1 text-xs uppercase tracking-[0.16em] text-[#c5d0b9]">{item.format}</p>
-                                {item.copies ? (
-                                  <p className="mt-2 text-xs text-[#d4deca]">Copias: {item.copies}</p>
-                                ) : null}
-                                {item.note ? <p className="mt-2 text-xs text-[#d4deca]">{item.note}</p> : null}
-                              </div>
-                            </div>
-                          ))
-                        ) : (
-                          <div className="border border-dashed border-[#6b7758] bg-[#47503b] p-3 text-sm text-[#d3ddc6]">
-                            No hay expansiones, libros o material extra vinculado.
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </>
-                ) : (
-                  <p className="text-sm text-[#d3ddc6]">No hay juegos que coincidan con el filtro actual.</p>
-                )}
-              </aside>
             </div>
           </div>
         </section>
       </div>
 
       {detailModalOpen && selectedGame ? (
-        <div className="fixed inset-0 z-40 grid place-items-center bg-black/55 p-4 xl:hidden">
+        <div
+          className="fixed inset-0 z-40 grid place-items-center bg-black/55 p-4"
+          onClick={() => setDetailModalOpen(false)}
+        >
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="game-detail-title"
-            className="max-h-[90vh] w-full max-w-md overflow-y-auto border border-[#b89b5e] bg-[#0d1b18] p-4 shadow-[0_22px_80px_rgba(0,0,0,0.45)]"
+            onClick={(event) => event.stopPropagation()}
+            className="max-h-[90vh] w-full max-w-3xl overflow-y-auto border border-[#b89b5e] bg-[#0d1b18] p-4 shadow-[0_22px_80px_rgba(0,0,0,0.45)] sm:p-5"
           >
             <div className="flex items-start justify-between gap-4 border-b border-[#28463a] pb-3">
               <div>
@@ -565,9 +488,10 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setDetailModalOpen(false)}
-                className="border border-[#3f6b58] bg-[#14251f] px-3 py-1.5 text-sm text-[#eef1de]"
+                aria-label="Cerrar modal"
+                className="flex h-9 w-9 items-center justify-center border border-[#3f6b58] bg-[#14251f] text-sm text-[#eef1de] transition hover:bg-[#213d33]"
               >
-                Cerrar
+                X
               </button>
             </div>
 
@@ -641,11 +565,15 @@ export default function Home() {
       ) : null}
 
       {randomModalOpen ? (
-        <div className="fixed inset-0 z-50 grid place-items-center bg-black/55 p-4">
+        <div
+          className="fixed inset-0 z-50 grid place-items-center bg-black/55 p-4"
+          onClick={() => setRandomModalOpen(false)}
+        >
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="random-game-title"
+            onClick={(event) => event.stopPropagation()}
             className="w-full max-w-2xl border border-[#b89b5e] bg-[#0d1b18] p-5 shadow-[0_22px_80px_rgba(0,0,0,0.45)]"
           >
             <div className="flex items-start justify-between gap-4 border-b border-[#28463a] pb-4">
@@ -658,9 +586,10 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => setRandomModalOpen(false)}
-                className="border border-[#3f6b58] bg-[#14251f] px-3 py-1.5 text-sm text-[#eef1de] transition hover:bg-[#213d33]"
+                aria-label="Cerrar modal"
+                className="flex h-9 w-9 items-center justify-center border border-[#3f6b58] bg-[#14251f] text-sm text-[#eef1de] transition hover:bg-[#213d33]"
               >
-                Cerrar
+                X
               </button>
             </div>
 
